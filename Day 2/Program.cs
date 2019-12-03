@@ -28,15 +28,19 @@ namespace Day2
 
         private static void Day1()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             var ram = new int[rom.Count];
             rom.CopyTo(ram, 0);
 
             int output = Run(ram, 12, 2);
             System.Diagnostics.Debug.WriteLine($"Part 1: {output}");
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
 
         private static void Day2()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             var ram = new int[rom.Count];
 
             for (int i = 0; i < 99; i++)
@@ -49,6 +53,8 @@ namespace Day2
                     if (output == 19690720)
                     {
                         System.Diagnostics.Debug.WriteLine($"Part 2: {100 * i + j}");
+                        sw.Stop();
+                        System.Diagnostics.Debug.WriteLine(sw.Elapsed);
                         return;
                     }
                 }
