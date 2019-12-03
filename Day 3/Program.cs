@@ -15,6 +15,8 @@ namespace Day3
 
         private static void Part1()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+
             var wires = File.ReadAllLines("input.txt");
 
             var segments1 = GetSegments(wires[0]);
@@ -32,10 +34,15 @@ namespace Day3
             }
 
             System.Diagnostics.Debug.WriteLine($"Part 1 Distance: {minDistance}");
+
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
 
         private static void Part2()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+
             var wires = File.ReadAllLines("input.txt");
 
             var segments1 = GetSegments(wires[0]);
@@ -59,6 +66,9 @@ namespace Day3
             }
 
             System.Diagnostics.Debug.WriteLine($"Part 2 Steps: {minSteps}");
+
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
 
         private static List<Segment> GetSegments(string wire)
