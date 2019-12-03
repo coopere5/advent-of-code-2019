@@ -74,10 +74,9 @@ namespace Day3
             return returnList;
         }
 
-        private static Segment GetNextSegment(Point? currentPoint, string movement)
+        private static Segment GetNextSegment(Point currentPoint, string movement)
         {
-            if (currentPoint == null) currentPoint = new Point(0, 0);
-            Point nextPoint = currentPoint.Value;
+            Point nextPoint = currentPoint;
             string direction;
             switch (movement[0])
             {
@@ -100,7 +99,7 @@ namespace Day3
                 default:
                     throw new Exception($"Unknown movement direction: {movement[0]}");
             }
-            return new Segment(currentPoint.Value, nextPoint, direction);
+            return new Segment(currentPoint, nextPoint, direction);
         }
 
         private static Point? GetIntersection(Segment segment1, Segment segment2)
