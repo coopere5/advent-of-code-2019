@@ -41,7 +41,7 @@ namespace Day4
                 int digit = int.Parse(character.ToString());
                 if (highest > digit) return false;
                 highest = digit;
-                if (!hasDouble) hasDouble = password.Count(c => c == character) > 1;
+                if (!hasDouble) hasDouble = password.Count(c => c == character) > 1;    //this works because we have established that it is nondecreasing
             }
 
             return hasDouble;
@@ -56,7 +56,7 @@ namespace Day4
                 int digit = int.Parse(character.ToString());
                 if (highest > digit) return false;
                 highest = digit;
-                if (!hasDouble) hasDouble = password.Count(c => c == character) == 2;
+                if (!hasDouble) hasDouble = password.Count(c => c == character) == 2;    //this works because we have established that it is nondecreasing
             }
 
             return hasDouble;
