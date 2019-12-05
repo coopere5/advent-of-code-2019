@@ -59,7 +59,7 @@ namespace Day5
         private static void Part1()
         {
             Console.WriteLine("Input 1 for Part 1");
-            
+
             var ram = new int[rom.Count];
             rom.CopyTo(ram, 0);
             Run(ram);
@@ -91,13 +91,13 @@ namespace Day5
                 int param1 = int.MinValue;
                 int param2 = int.MinValue;
                 //int param3 = int.MinValue;
-                
-                if (new[]{1,2,3,4,5,6,7,8}.Contains(opcode))
+
+                if (new[] { 1, 2, 3, 4, 5, 6, 7, 8 }.Contains(opcode))
                 {
                     param1 = param1Mode == 0 ? intcode[intcode[currentPos + 1]] : intcode[currentPos + 1];
                 }
 
-                if (new[] {1, 2, 5, 6, 7, 8}.Contains(opcode))
+                if (new[] { 1, 2, 5, 6, 7, 8 }.Contains(opcode))
                 {
                     param2 = param2Mode == 0 ? intcode[intcode[currentPos + 2]] : intcode[currentPos + 2];
                 }
@@ -114,7 +114,6 @@ namespace Day5
                         currentPos += 4;
                         break;
                     case 2:
-                        
                         intcode[intcode[currentPos + 3]] = param1 * param2;
                         currentPos += 4;
                         break;
