@@ -22,11 +22,11 @@ namespace Day2
 
         private static void Main(string[] args)
         {
-            Day1();
-            Day2();
+            Part1();
+            Part2();
         }
 
-        private static void Day1()
+        private static void Part1()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var ram = new int[rom.Count];
@@ -38,7 +38,7 @@ namespace Day2
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
 
-        private static void Day2()
+        private static void Part2()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var ram = new int[rom.Count];
