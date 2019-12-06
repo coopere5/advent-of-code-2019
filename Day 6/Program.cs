@@ -16,30 +16,11 @@ namespace Day6
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var input = File.ReadAllLines("input.txt");
-            var nodes = new List<TreeNode> {new TreeNode(null, "COM")};
-            nodes.AddRange(input.Select(line => line.Split(')')).Select(splitLine => new TreeNode(splitLine[0], splitLine[1])));
-            
-            TreeNode parent;
-            foreach (TreeNode node in nodes)
-            {
-                parent = nodes.FirstOrDefault(n => n.ID == node.ParentID);
-                node.Parent = parent;
-                parent?.Children.Add(node);
-            }
+            var nodes = BuildTree();
 
-            int count = 0;
-            foreach (TreeNode node in nodes)
-            {
-                parent = node.Parent;
-                while (parent != null)
-                {
-                    count++;
-                    parent = parent.Parent;
-                }
-            }
+            int count = nodes.Select(node => node.Parent).Select(CountOrbits).Sum();
 
-            System.Diagnostics.Debug.WriteLine(count);
+            System.Diagnostics.Debug.WriteLine($"Part 1: {count}");
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
@@ -49,32 +30,23 @@ namespace Day6
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var input = File.ReadAllLines("input.txt");
-            var nodes = new List<TreeNode> {new TreeNode(null, "COM")};
-            nodes.AddRange(input.Select(line => line.Split(')')).Select(splitLine => new TreeNode(splitLine[0], splitLine[1])));
-            
-            TreeNode parent;
-            foreach (TreeNode node in nodes)
-            {
-                parent = nodes.FirstOrDefault(n => n.ID == node.ParentID);
-                node.Parent = parent;
-                parent?.Children.Add(node);
-            }
+            var nodes = BuildTree();
 
             var youParents = new List<TreeNode>();
-            parent = nodes.First(n => n.ID == "YOU").Parent;
-            while (parent != null)
+            var sanParents = new List<TreeNode>();
+
+            TreeNode curParent = nodes.First(n => n.ID == "YOU").Parent;
+            while (curParent != null)
             {
-                youParents.Add(parent);
-                parent = parent.Parent;
+                youParents.Add(curParent);
+                curParent = curParent.Parent;
             }
 
-            var sanParents = new List<TreeNode>();
-            parent = nodes.First(n => n.ID == "SAN").Parent;
-            while (parent != null)
+            curParent = nodes.First(n => n.ID == "SAN").Parent;
+            while (curParent != null)
             {
-                sanParents.Add(parent);
-                parent = parent.Parent;
+                sanParents.Add(curParent);
+                curParent = curParent.Parent;
             }
 
             foreach (TreeNode node in youParents)
@@ -85,24 +57,42 @@ namespace Day6
             }
 
             int count = 0;
-            parent = youParents.First().Parent;
-            while (parent != null)
-            {
-                count++;
-                parent = parent.Parent;
-            }
+            count += CountOrbits(youParents.First().Parent);
+            count += CountOrbits(sanParents.First().Parent);
 
-            parent = sanParents.First().Parent;
-            while (parent != null)
-            {
-                count++;
-                parent = parent.Parent;
-            }
-
-            System.Diagnostics.Debug.WriteLine(count);
+            System.Diagnostics.Debug.WriteLine($"Part 2: {count}");
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
+        }
+
+        private static IList<TreeNode> BuildTree()
+        {
+            var input = File.ReadAllLines("input.txt");
+            var nodes = new List<TreeNode> { new TreeNode(null, "COM") };
+            nodes.AddRange(input.Select(line => line.Split(')')).Select(splitLine => new TreeNode(splitLine[0], splitLine[1])));
+
+            foreach (TreeNode node in nodes)
+            {
+                TreeNode parent = nodes.FirstOrDefault(n => n.ID == node.ParentID);
+                node.Parent = parent;
+                parent?.Children.Add(node);
+            }
+
+            return nodes;
+        }
+
+        private static int CountOrbits(TreeNode node)
+        {
+            int count = 0;
+
+            while (node != null)
+            {
+                count++;
+                node = node.Parent;
+            }
+
+            return count;
         }
     }
 
