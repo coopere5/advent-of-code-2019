@@ -13,6 +13,7 @@ namespace Day7
         static Program()
         {
             rom = Array.AsReadOnly(new[] { 3, 8, 1001, 8, 10, 8, 105, 1, 0, 0, 21, 30, 51, 76, 101, 118, 199, 280, 361, 442, 99999, 3, 9, 102, 5, 9, 9, 4, 9, 99, 3, 9, 102, 4, 9, 9, 1001, 9, 3, 9, 102, 2, 9, 9, 101, 2, 9, 9, 4, 9, 99, 3, 9, 1002, 9, 3, 9, 1001, 9, 4, 9, 102, 5, 9, 9, 101, 3, 9, 9, 1002, 9, 3, 9, 4, 9, 99, 3, 9, 101, 5, 9, 9, 102, 4, 9, 9, 1001, 9, 3, 9, 1002, 9, 2, 9, 101, 4, 9, 9, 4, 9, 99, 3, 9, 1002, 9, 2, 9, 1001, 9, 3, 9, 102, 5, 9, 9, 4, 9, 99, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 99, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 99, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 99, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 99, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 99 });
+            //rom = Array.AsReadOnly(new[] { 3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001, 28, -1, 28, 1005, 28, 6, 99, 0, 0, 5 });
         }
 
         private static void Main(string[] args)
@@ -29,6 +30,7 @@ namespace Day7
             rom.CopyTo(ram, 0);
             int signal = 0;
             int max = int.MinValue;
+            int[] sequence = new int[] { };
             foreach (var settings in GetPermutations<int>(Enumerable.Range(0, 5), 5))
             {
                 signal = 0;
@@ -37,32 +39,27 @@ namespace Day7
                     Run(ram, out signal, phase, signal);
                 }
                 max = Math.Max(max, signal);
+                if (max == signal) sequence = settings.ToArray();
             }
 
             Console.WriteLine($"Part 1: {max}");
+            Console.Write($"Using sequence: ");
+            foreach (int x in sequence)
+            {
+                Console.Write(x);
+            }
+            Console.WriteLine();
         }
 
         private static void Part2()
         {
             var ram = new int[rom.Count];
             rom.CopyTo(ram, 0);
-            int signal = 0;
-            int max = int.MinValue;
-            foreach (var settings in GetPermutations<int>(Enumerable.Range(5, 5), 5))
-            {
-                signal = 0;
-                foreach (var phase in settings)
-                {
-                    Run(ram, out signal, phase, signal);
-                }
-                while (true)
-                {
-                    Run(ram, out signal, signal);
-                }
-                max = Math.Max(max, signal);
-            }
 
-            Console.WriteLine("MAX" + max);
+            //need to have 5 computers still running all at once
+            //give A MODE,0 first, it will generate an output to pass to B, etc, and await an input from E
+            //final output is when E finally halts
+            //probably need to use a class Computer, and may need await type logic in order to properly pass IO between the classes
         }
 
         //thanks to SO user Pengyang
