@@ -18,9 +18,9 @@ namespace Day7
         private static void Main(string[] args)
         {
             Part1();
+            Console.ReadKey();
+            Console.WriteLine();
             Part2();
-
-            Console.ReadLine();
         }
 
         private static void Part1()
@@ -39,30 +39,30 @@ namespace Day7
                 max = Math.Max(max, signal);
             }
 
-            Console.WriteLine("MAX" + max);
+            Console.WriteLine($"Part 1: {max}");
         }
 
         private static void Part2()
         {
-            // var ram = new int[rom.Count];
-            // rom.CopyTo(ram, 0);
-            // int signal = 0;
-            // int max = int.MinValue;
-            // foreach (var settings in GeneratePermutations<int>(Enumerable.Range(5, 5).ToList()))
-            // {
-            //     signal = 0;
-            //     foreach (var phase in settings)
-            //     {
-            //         Run(ram, out signal, phase, signal);
-            //     }
-            //     while (true)
-            //     {
-            //         Run(ram, out signal, signal);
-            //     }
-            //     max = Math.Max(max, signal);
-            // }
+            var ram = new int[rom.Count];
+            rom.CopyTo(ram, 0);
+            int signal = 0;
+            int max = int.MinValue;
+            foreach (var settings in GetPermutations<int>(Enumerable.Range(5, 5), 5))
+            {
+                signal = 0;
+                foreach (var phase in settings)
+                {
+                    Run(ram, out signal, phase, signal);
+                }
+                while (true)
+                {
+                    Run(ram, out signal, signal);
+                }
+                max = Math.Max(max, signal);
+            }
 
-            // Console.WriteLine("MAX" + max);
+            Console.WriteLine("MAX" + max);
         }
 
         //thanks to SO user Pengyang
