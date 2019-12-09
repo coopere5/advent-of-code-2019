@@ -55,6 +55,7 @@ namespace Day8
             string outputString = new string(outputArray);
             outputString = outputString.Replace('0', ' ');
             var outputFormatted = Enumerable.Range(0, outputString.Length / 25).Select(i => outputString.Substring(i * 25, 25));
+            Console.WriteLine("Part 2");
             foreach (string line in outputFormatted)
             {
                 Console.WriteLine(line);
