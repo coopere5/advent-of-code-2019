@@ -73,7 +73,7 @@ namespace Day10
 
             map.Remove(station);
             var polarMap = new HashSet<Asteroid>();
-            SortedList<double, int> angles = new SortedList<double, int>();
+            var angles = new SortedList<double, int>();
             int idx = 0;
             foreach (Point p in map)
             {
@@ -91,13 +91,13 @@ namespace Day10
             int curAngle = angles.IndexOfKey(-Math.PI / 2);
             while (polarMap.Any())
             {
-                Asteroid toRemove = polarMap.Where(p => p.Polar.Theta == angles.Keys[curAngle]).OrderBy(p => p.Polar.R).FirstOrDefault();
+                Asteroid toRemove = polarMap.Where(p => Math.Abs(p.Polar.Theta - angles.Keys[curAngle]) < double.Epsilon).OrderBy(p => p.Polar.R).FirstOrDefault();
                 if (polarMap.Remove(toRemove))
                 {
                     numDestroyed++;
                     if (numDestroyed == 200)
                     {
-                        Console.WriteLine($"Part 2: {toRemove.Rectangular}, {toRemove.Rectangular.X*100+toRemove.Rectangular.Y}");
+                        Console.WriteLine($"Part 2: {toRemove.Rectangular}, {toRemove.Rectangular.X * 100 + toRemove.Rectangular.Y}");
                     }
                 }
 
