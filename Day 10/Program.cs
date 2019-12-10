@@ -29,25 +29,22 @@ namespace Day10
                     if (c == '#') map.Add(new Point(x, y));
                     x++;
                 }
-
                 y++;
             }
 
             int maxDetected = int.MinValue;
-
-            foreach (Point a in map)
+            Point detectedAt = new Point(0, 0);
+            foreach (Point possibleStation in map)
             {
                 var angles = new HashSet<double>();
-
-                foreach (Point b in map.Except(new[] { a }))
+                foreach (Point asteroid in map.Except(new[] { possibleStation }))
                 {
-                    angles.Add(GeometryUtil.GetAngle(a, b));
+                    angles.Add(GeometryUtil.GetAngle(possibleStation, asteroid));
                 }
-
                 maxDetected = Math.Max(maxDetected, angles.Count);
+                if (maxDetected == angles.Count) detectedAt = possibleStation;
             }
-
-            Console.WriteLine($"Part 1: {maxDetected}");
+            Console.WriteLine($"Part 1: {maxDetected} at {detectedAt}");
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
@@ -95,5 +92,10 @@ namespace Day10
 
         public int X { get; set; }
         public int Y { get; set; }
+
+        public override string ToString()
+        {
+            return $"({X},{Y})";
+        }
     }
 }
