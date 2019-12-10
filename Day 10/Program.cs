@@ -9,12 +9,12 @@ namespace Day10
     {
         private static void Main()
         {
-            Part1();
-            Part2();
+            Point station = Part1();
+            Part2(station);
             Console.ReadLine();
         }
 
-        private static void Part1()
+        private static Point Part1()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
@@ -48,19 +48,66 @@ namespace Day10
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
+
+            return detectedAt;
         }
 
-        private static void Part2()
+        private static void Part2(Point station)
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
             var input = File.ReadAllLines("input.txt");
 
+            var map = new HashSet<Point>();
+            int y = 0;
+            foreach (string line in input)
+            {
+                int x = 0;
+                foreach (char c in line)
+                {
+                    if (c == '#') map.Add(new Point(x, y));
+                    x++;
+                }
+                y++;
+            }
+
+            map.Remove(station);
+            var polarMap = new HashSet<Asteroid>();
+            SortedList<double, int> angles = new SortedList<double, int>();
+            int idx = 0;
+            foreach (Point p in map)
+            {
+                double angle = GeometryUtil.GetAngle(station, p);
+                var asteroid = new Asteroid(GeometryUtil.GetPolarCoordinate(station, p), p);
+                polarMap.Add(asteroid);
+                if (!angles.ContainsKey(angle))
+                {
+                    angles.Add(angle, idx);
+                    idx++;
+                }
+            }
+
+            int numDestroyed = 0;
+            int curAngle = angles.IndexOfKey(-Math.PI / 2);
+            while (polarMap.Any())
+            {
+                Asteroid toRemove = polarMap.Where(p => p.Polar.Theta == angles.Keys[curAngle]).OrderBy(p => p.Polar.R).FirstOrDefault();
+                if (polarMap.Remove(toRemove))
+                {
+                    numDestroyed++;
+                    if (numDestroyed == 200)
+                    {
+                        Console.WriteLine($"Part 2: {toRemove.Rectangular}, {toRemove.Rectangular.X*100+toRemove.Rectangular.Y}");
+                    }
+                }
+
+                curAngle++;
+                if (curAngle >= angles.Count) curAngle = 0;
+            }
+
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
-
-
     }
 
     public class GeometryUtil
@@ -80,6 +127,11 @@ namespace Day10
             double radius = Math.Sqrt(dx * dx + dy * dy);
             return radius;
         }
+
+        public static PolarCoordinate GetPolarCoordinate(Point p1, Point p2)
+        {
+            return new PolarCoordinate(GetRadius(p1, p2), GetAngle(p1, p2));
+        }
     }
 
     public struct Point
@@ -97,5 +149,34 @@ namespace Day10
         {
             return $"({X},{Y})";
         }
+    }
+
+    public struct PolarCoordinate
+    {
+        public PolarCoordinate(double r, double theta)
+        {
+            R = r;
+            Theta = theta;
+        }
+
+        public double R { get; set; }
+        public double Theta { get; set; }
+
+        public override string ToString()
+        {
+            return $"({R},{Theta})";
+        }
+    }
+
+    public struct Asteroid
+    {
+        public Asteroid(PolarCoordinate polar, Point rectangular)
+        {
+            Polar = polar;
+            Rectangular = rectangular;
+        }
+
+        public PolarCoordinate Polar { get; set; }
+        public Point Rectangular { get; set; }
     }
 }
