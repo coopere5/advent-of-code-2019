@@ -35,17 +35,11 @@ namespace AdventUtils
             Memory = intcode;
         }
 
-        public long Run()
-        {
-            return Run(out long output);
-        }
-
-        public long Run(out long output, params long[] inputParams)
+        public long Run(params long[] inputParams)
         {
             long rv = 0;
             RelativeBase = 0;
             InstructionPtr = 0;
-            output = 0;
             Array.ForEach(inputParams, e => InputQueue.Enqueue(e));
 
             bool running = true;
@@ -54,8 +48,6 @@ namespace AdventUtils
                 rv = RunNext();
                 running = rv == long.MinValue;
             }
-
-            if (OutputQueue.Any()) output = OutputQueue.Peek();
 
             return rv;
         }
