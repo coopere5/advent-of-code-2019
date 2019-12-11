@@ -1,17 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using AdventUtils;
 
 namespace Day5
 {
     internal class Program
     {
-        private static readonly ReadOnlyCollection<int> rom;
+        private static readonly ReadOnlyCollection<long> rom;
 
         static Program()
         {
-            rom = Array.AsReadOnly(new[]
+            rom = Array.AsReadOnly(new long[]
             {
                 3, 225, 1, 225, 6, 6, 1100, 1, 238, 225, 104, 0, 1101, 48, 82, 225, 102, 59, 84, 224, 1001, 224, -944,
                 224, 4, 224, 102, 8, 223, 223, 101, 6, 224, 224, 1, 223, 224, 223, 1101, 92, 58, 224, 101, -150, 224,
@@ -59,100 +58,17 @@ namespace Day5
         private static void Part1()
         {
             Console.WriteLine("Input 1 for Part 1");
-
-            var ram = new int[rom.Count];
-            rom.CopyTo(ram, 0);
-            Run(ram);
+            IntcodeComputer computer = new IntcodeComputer(rom);
+            computer.InputQueue.Enqueue(1);
+            computer.Run();
         }
 
         private static void Part2()
         {
             Console.WriteLine("Input 5 for Part 2");
-
-            var ram = new int[rom.Count];
-            rom.CopyTo(ram, 0);
-            Run(ram);
-        }
-
-        private static int Run(IList<int> intcode)
-        {
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-
-            int currentPos = 0;
-            while (true)
-            {
-                string fullOpcode = intcode[currentPos].ToString().PadLeft(5, '0');
-
-                int opcode = int.Parse(fullOpcode.Substring(3, 2));
-                int param1Mode = int.Parse(fullOpcode.Substring(2, 1));
-                int param2Mode = int.Parse(fullOpcode.Substring(1, 1));
-                //int param3Mode = int.Parse(fullOpcode.Substring(0, 1));
-
-                int param1 = int.MinValue;
-                int param2 = int.MinValue;
-                //int param3 = int.MinValue;
-
-                if (new[] { 1, 2, 3, 4, 5, 6, 7, 8 }.Contains(opcode))
-                {
-                    param1 = param1Mode == 0 ? intcode[intcode[currentPos + 1]] : intcode[currentPos + 1];
-                }
-
-                if (new[] { 1, 2, 5, 6, 7, 8 }.Contains(opcode))
-                {
-                    param2 = param2Mode == 0 ? intcode[intcode[currentPos + 2]] : intcode[currentPos + 2];
-                }
-
-                //if (new[] {1, 2, 7, 8}.Contains(opcode))
-                //{
-                //    param3 = param3Mode == 0 ? intcode[intcode[currentPos + 3]] : intcode[currentPos + 3];
-                //}
-
-                switch (opcode)
-                {
-                    case 1:
-                        intcode[intcode[currentPos + 3]] = param1 + param2;
-                        currentPos += 4;
-                        break;
-                    case 2:
-                        intcode[intcode[currentPos + 3]] = param1 * param2;
-                        currentPos += 4;
-                        break;
-                    case 3:
-                        Console.Write("Input: ");
-                        sw.Stop();
-                        string input = Console.ReadLine();
-                        sw.Start();
-                        intcode[intcode[currentPos + 1]] = int.Parse(input.Trim());
-                        currentPos += 2;
-                        break;
-                    case 4:
-                        Console.WriteLine($"Output: {param1}");
-                        currentPos += 2;
-                        break;
-                    case 5:
-                        if (param1 != 0) currentPos = param2;
-                        else currentPos += 3;
-                        break;
-                    case 6:
-                        if (param1 == 0) currentPos = param2;
-                        else currentPos += 3;
-                        break;
-                    case 7:
-                        intcode[intcode[currentPos + 3]] = param1 < param2 ? 1 : 0;
-                        currentPos += 4;
-                        break;
-                    case 8:
-                        intcode[intcode[currentPos + 3]] = param1 == param2 ? 1 : 0;
-                        currentPos += 4;
-                        break;
-                    case 99:
-                        sw.Stop();
-                        System.Diagnostics.Debug.WriteLine(sw.Elapsed);
-                        return intcode[0];
-                    default:
-                        throw new Exception($"Unknown opcode: {opcode} at {currentPos}");
-                }
-            }
+            IntcodeComputer computer = new IntcodeComputer(rom);
+            computer.InputQueue.Enqueue(5);
+            computer.Run();
         }
     }
 }
