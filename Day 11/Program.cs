@@ -99,7 +99,7 @@ namespace Day11
 
             var points = new Dictionary<Point, long>();
             IntcodeComputer computer = new IntcodeComputer(memory);
-            computer.InputQueue.Enqueue(0);
+            computer.InputQueue.Enqueue(1);
 
             bool running = true;
             long output = 0;
@@ -137,11 +137,11 @@ namespace Day11
                 }
             }
             Console.WriteLine("Part 2:");
-            for (int y = points.Keys.Min(p => p.Y); y < points.Keys.Max(p => p.Y); y++)
+            for (int y = points.Keys.Max(p => p.Y); y >= points.Keys.Min(p => p.Y); y--)
             {
-                for (int x = points.Keys.Min(p => p.X); x < points.Keys.Max(p => p.X); x++)
+                for (int x = points.Keys.Min(p => p.X); x <= points.Keys.Max(p => p.X); x++)
                 {
-                    var point = new Point(x,y);
+                    Point point = new Point(x,y);
                     if (points.ContainsKey(point) && points[point]==1)
                     {
                         Console.Write("#");
