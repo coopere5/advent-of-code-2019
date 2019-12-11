@@ -196,5 +196,10 @@ namespace AdventUtils
             long opcode = long.Parse(fullOpcode.Substring(3, 2));
             return opcode;
         }
+
+        public bool AwaitingInput()
+        {
+            return PeekNext() == 3 && !InputQueue.Any();
+        }
     }
 }
