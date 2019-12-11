@@ -55,7 +55,7 @@ namespace AdventUtils
                 running = rv == long.MinValue;
             }
 
-            if (OutputQueue.Any()) output = OutputQueue.Dequeue();
+            if (OutputQueue.Any()) output = OutputQueue.Peek();
 
             return rv;
         }
