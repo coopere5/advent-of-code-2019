@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AdventUtils;
 
 namespace Day11
@@ -94,7 +95,67 @@ namespace Day11
 
         private static void Part2()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
 
+            var points = new Dictionary<Point, long>();
+            IntcodeComputer computer = new IntcodeComputer(memory);
+            computer.InputQueue.Enqueue(0);
+
+            bool running = true;
+            long output = 0;
+            Point currentPoint = new Point(0, 0);
+            points.Add(currentPoint, 1);
+            int currentDirection = 0;
+
+            while (running)
+            {
+                running = computer.RunNext(ref output) == long.MinValue;
+                if (computer.OutputQueue.Count == 2)
+                {
+                    points[currentPoint] = computer.OutputQueue.Dequeue();
+                    if (computer.OutputQueue.Dequeue() == 0) currentDirection--;
+                    else currentDirection++;
+                    if (currentDirection == -1) currentDirection = 3;
+                    else if (currentDirection == 4) currentDirection = 0;
+                    switch (currentDirection)
+                    {
+                        case 0:
+                            currentPoint.Y++;
+                            break;
+                        case 1:
+                            currentPoint.X++;
+                            break;
+                        case 2:
+                            currentPoint.Y--;
+                            break;
+                        case 3:
+                            currentPoint.X--;
+                            break;
+                    }
+                    if (!points.ContainsKey(currentPoint)) points.Add(currentPoint, 0);
+                    computer.InputQueue.Enqueue(points[currentPoint]);
+                }
+            }
+            Console.WriteLine("Part 2:");
+            for (int y = points.Keys.Min(p => p.Y); y < points.Keys.Max(p => p.Y); y++)
+            {
+                for (int x = points.Keys.Min(p => p.X); x < points.Keys.Max(p => p.X); x++)
+                {
+                    var point = new Point(x,y);
+                    if (points.ContainsKey(point) && points[point]==1)
+                    {
+                        Console.Write("#");
+                    }
+                    else
+                    {
+                        Console.Write(" ");
+                    }
+                }
+                Console.WriteLine();
+            }
+
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
     }
 
