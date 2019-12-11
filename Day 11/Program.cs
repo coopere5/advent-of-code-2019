@@ -53,14 +53,13 @@ namespace Day11
             computer.InputQueue.Enqueue(0);
 
             bool running = true;
-            long output = 0;
             Point currentPoint = new Point(0, 0);
             points.Add(currentPoint, 0);
             int currentDirection = 0;
 
             while (running)
             {
-                running = computer.RunNext(ref output) == long.MinValue;
+                running = computer.RunNext() == long.MinValue;
                 if (computer.OutputQueue.Count == 2)
                 {
                     points[currentPoint] = computer.OutputQueue.Dequeue();
@@ -102,14 +101,13 @@ namespace Day11
             computer.InputQueue.Enqueue(1);
 
             bool running = true;
-            long output = 0;
             Point currentPoint = new Point(0, 0);
             points.Add(currentPoint, 1);
             int currentDirection = 0;
 
             while (running)
             {
-                running = computer.RunNext(ref output) == long.MinValue;
+                running = computer.RunNext() == long.MinValue;
                 if (computer.OutputQueue.Count == 2)
                 {
                     points[currentPoint] = computer.OutputQueue.Dequeue();
