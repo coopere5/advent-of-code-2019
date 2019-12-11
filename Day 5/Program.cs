@@ -57,16 +57,26 @@ namespace Day5
 
         private static void Part1()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            
             IntcodeComputer computer = new IntcodeComputer(rom) { PrintOutput = true };
             computer.InputQueue.Enqueue(1);
             computer.Run();
+            
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
 
         private static void Part2()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            
             IntcodeComputer computer = new IntcodeComputer(rom) { PrintOutput = true };
             computer.InputQueue.Enqueue(5);
             computer.Run();
+            
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
     }
 }
