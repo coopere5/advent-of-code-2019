@@ -10,6 +10,8 @@ namespace AdventUtils
         private long RelativeBase;
         private long InstructionPtr;
 
+        public bool PrintOutput = false;
+
         public Queue<long> InputQueue { get; set; }
         public Queue<long> OutputQueue { get; set; }
 
@@ -152,7 +154,7 @@ namespace AdventUtils
                     if (InputQueue.Any())
                     {
                         input = InputQueue.Dequeue().ToString();
-                        //Console.WriteLine($"Input: {input}");
+                        if (PrintOutput) Console.WriteLine($"Input: {input}");
                     }
                     else
                     {
@@ -163,7 +165,7 @@ namespace AdventUtils
                     InstructionPtr += 2;
                     break;
                 case 4:
-                    //Console.WriteLine($"Output: {param1}");
+                    if (PrintOutput) Console.WriteLine($"Output: {param1}");
                     OutputQueue.Enqueue(param1);
                     InstructionPtr += 2;
                     break;
