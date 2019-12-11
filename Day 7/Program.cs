@@ -88,11 +88,11 @@ namespace Day7
                 bool running = true;
                 while (running)
                 {
-                    if (computerA.PeekNext() != 3 || computerA.InputQueue.Any()) computerA.RunNext();
-                    if (computerB.PeekNext() != 3 || computerB.InputQueue.Any()) computerB.RunNext();
-                    if (computerC.PeekNext() != 3 || computerC.InputQueue.Any()) computerC.RunNext();
-                    if (computerD.PeekNext() != 3 || computerD.InputQueue.Any()) computerD.RunNext();
-                    if (computerE.PeekNext() != 3 || computerE.InputQueue.Any()) running = computerE.RunNext() == long.MinValue;
+                    if (!computerA.AwaitingInput()) computerA.RunNext();
+                    if (!computerB.AwaitingInput()) computerB.RunNext();
+                    if (!computerC.AwaitingInput()) computerC.RunNext();
+                    if (!computerD.AwaitingInput()) computerD.RunNext();
+                    if (!computerE.AwaitingInput()) running = computerE.RunNext() == long.MinValue;
                 }
 
                 long signal = computerE.OutputQueue.Dequeue();
