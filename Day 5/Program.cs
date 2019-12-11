@@ -57,16 +57,14 @@ namespace Day5
 
         private static void Part1()
         {
-            Console.WriteLine("Input 1 for Part 1");
-            IntcodeComputer computer = new IntcodeComputer(rom);
+            IntcodeComputer computer = new IntcodeComputer(rom) { PrintOutput = true };
             computer.InputQueue.Enqueue(1);
             computer.Run();
         }
 
         private static void Part2()
         {
-            Console.WriteLine("Input 5 for Part 2");
-            IntcodeComputer computer = new IntcodeComputer(rom);
+            IntcodeComputer computer = new IntcodeComputer(rom) { PrintOutput = true };
             computer.InputQueue.Enqueue(5);
             computer.Run();
         }
