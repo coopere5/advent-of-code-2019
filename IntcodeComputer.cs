@@ -11,6 +11,7 @@ namespace AdventUtils
         private long InstructionPtr;
 
         public Queue<long> InputQueue { get; set; }
+        public Queue<long> OutputQueue { get; set; }
 
         public IntcodeComputer()
         {
@@ -18,6 +19,7 @@ namespace AdventUtils
             InstructionPtr = 0;
 
             InputQueue = new Queue<long>();
+            OutputQueue = new Queue<long>();
         }
 
         public IntcodeComputer(IEnumerable<long> intcode) : this()
@@ -144,22 +146,23 @@ namespace AdventUtils
                     InstructionPtr += 4;
                     break;
                 case 3:
-                    Console.Write("Input: ");
                     string input;
                     if (InputQueue.Any())
                     {
                         input = InputQueue.Dequeue().ToString();
-                        Console.WriteLine(input);
+                        //Console.WriteLine($"Input: {input}");
                     }
                     else
                     {
+                        Console.Write("Input: ");
                         input = Console.ReadLine();
                     }
                     Memory[param1Key] = int.Parse(input.Trim());
                     InstructionPtr += 2;
                     break;
                 case 4:
-                    Console.WriteLine($"Output: {param1}");
+                    //Console.WriteLine($"Output: {param1}");
+                    OutputQueue.Enqueue(param1);
                     output = param1;
                     InstructionPtr += 2;
                     break;
