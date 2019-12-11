@@ -51,7 +51,7 @@ namespace Day7
                 long signal = 0;
                 foreach (var phase in settings)
                 {
-                    computer.Run(out signal, phase, signal);
+                    computer.Run(phase, signal);
                     if (computer.OutputQueue.Any()) signal = computer.OutputQueue.Dequeue();
                 }
                 max = Math.Max(max, signal);
