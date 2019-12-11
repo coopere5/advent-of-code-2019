@@ -49,14 +49,16 @@ namespace AdventUtils
             bool running = true;
             while (running)
             {
-                rv = RunNext(ref output);
+                rv = RunNext();
                 running = rv == long.MinValue;
             }
+
+            if (OutputQueue.Any()) output = OutputQueue.Dequeue();
 
             return rv;
         }
 
-        public long RunNext(ref long output)
+        public long RunNext()
         {
             string fullOpcode = Memory[InstructionPtr].ToString().PadLeft(5, '0');
             long opcode = long.Parse(fullOpcode.Substring(3, 2));
@@ -163,7 +165,6 @@ namespace AdventUtils
                 case 4:
                     //Console.WriteLine($"Output: {param1}");
                     OutputQueue.Enqueue(param1);
-                    output = param1;
                     InstructionPtr += 2;
                     break;
                 case 5:
@@ -193,6 +194,13 @@ namespace AdventUtils
             }
 
             return long.MinValue;
+        }
+
+        public long PeekNext()
+        {
+            string fullOpcode = Memory[InstructionPtr].ToString().PadLeft(5, '0');
+            long opcode = long.Parse(fullOpcode.Substring(3, 2));
+            return opcode;
         }
     }
 }
