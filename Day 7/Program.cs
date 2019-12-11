@@ -44,6 +44,8 @@ namespace Day7
 
         private static void Part1()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            
             IntcodeComputer computer = new IntcodeComputer(rom);
             long max = int.MinValue;
             foreach (var settings in GetPermutations(Enumerable.Range(0, 5), 5))
@@ -57,10 +59,15 @@ namespace Day7
                 max = Math.Max(max, signal);
             }
             Console.WriteLine($"Part 1: {max}");
+            
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
 
         private static void Part2()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            
             long max = long.MinValue;
             foreach (var settings in GetPermutations(Enumerable.Range(5, 5), 5))
             {
@@ -100,6 +107,9 @@ namespace Day7
             }
 
             Console.WriteLine($"Part 2: {max}");
+            
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(sw.Elapsed);
         }
 
         //thanks to SO user Pengyang
