@@ -1,15 +1,16 @@
 using System;
 using System.Collections.ObjectModel;
+using AdventUtils;
 
 namespace Day2
 {
     internal class Program
     {
-        private static readonly ReadOnlyCollection<int> rom;
+        private static readonly ReadOnlyCollection<long> rom;
 
         static Program()
         {
-            rom = Array.AsReadOnly(new[]
+            rom = Array.AsReadOnly(new long[]
             {
                 1, 0, 0, 3, 1, 1, 2, 3, 1, 3, 4, 3, 1, 5, 0, 3, 2, 13, 1, 19, 1, 10, 19, 23, 1, 23, 9, 27, 1, 5, 27, 31,
                 2, 31, 13, 35, 1, 35, 5, 39, 1, 39, 5, 43, 2, 13, 43, 47, 2, 47, 10, 51, 1, 51, 6, 55, 2, 55, 9, 59, 1,
@@ -20,7 +21,7 @@ namespace Day2
             });
         }
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             Part1();
             Part2();
@@ -29,10 +30,12 @@ namespace Day2
         private static void Part1()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            var ram = new int[rom.Count];
+            var ram = new long[rom.Count];
             rom.CopyTo(ram, 0);
-
-            int output = Run(ram, 12, 2);
+            ram[1] = 12;
+            ram[2] = 2;
+            IntcodeComputer computer = new IntcodeComputer(ram);
+            long output = computer.Run();
             System.Diagnostics.Debug.WriteLine($"Part 1: {output}");
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
@@ -41,15 +44,16 @@ namespace Day2
         private static void Part2()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            var ram = new int[rom.Count];
-
+            var ram = new long[rom.Count];
             for (int i = 0; i < 99; i++)
             {
                 for (int j = 0; j < 99; j++)
                 {
                     rom.CopyTo(ram, 0);
-                    int output = Run(ram, i, j);
-
+                    ram[1] = i;
+                    ram[2] = j;
+                    IntcodeComputer computer = new IntcodeComputer(ram);
+                    long output = computer.Run();
                     if (output == 19690720)
                     {
                         System.Diagnostics.Debug.WriteLine($"Part 2: {100 * i + j}");
@@ -57,34 +61,6 @@ namespace Day2
                         System.Diagnostics.Debug.WriteLine(sw.Elapsed);
                         return;
                     }
-                }
-            }
-        }
-
-        private static int Run(int[] input, int noun, int verb)
-        {
-            input[1] = noun;
-            input[2] = verb;
-            int currentPos = 0;
-            while (true)
-            {
-                int opcode = input[currentPos];
-                int x1 = input[input[currentPos + 1]];
-                int x2 = input[input[currentPos + 2]];
-                switch (opcode)
-                {
-                    case 1:
-                        input[input[currentPos + 3]] = x1 + x2;
-                        currentPos += 4;
-                        break;
-                    case 2:
-                        input[input[currentPos + 3]] = x1 * x2;
-                        currentPos += 4;
-                        break;
-                    case 99:
-                        return input[0];
-                    default:
-                        throw new Exception($"Unknown opcode: {opcode} at {currentPos}");
                 }
             }
         }
