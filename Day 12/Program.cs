@@ -1,20 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace Day12
 {
     internal class Program
     {
-        //input:
-        // <x=-13, y=-13, z=-13>
-        // <x=5, y=-8, z=3>
-        // <x=-6, y=-10, z=-3>
-        // <x=0, y=5, z=-5>
-
         private static void Main()
         {
             Part1();
