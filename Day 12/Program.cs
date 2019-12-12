@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -60,48 +59,14 @@ namespace Day12
                              .Select(split => new Moon(int.Parse(split[0].Split('=')[1]), int.Parse(split[1].Split('=')[1]), int.Parse(split[2].Split('=')[1].Replace('>', ' '))))
                              .ToList();
 
-            long stepsX = 0;
-            while (true)
-            {
-                foreach (Moon moon in moons)
-                {
-                    foreach (Moon interactingMoon in moons)
-                    {
-                        moon.ApplyGravity(interactingMoon);
-                    }
-                }
-
-                foreach (Moon moon in moons)
-                {
-                    moon.ApplyVelocity();
-                }
-                stepsX++;
-                if (moons.All(moon => moon.Velocity.X == 0)) break;
-            }
-            stepsX *= 2;
-
             long stepsY = 0;
-            while (true)
-            {
-                foreach (Moon moon in moons)
-                {
-                    foreach (Moon interactingMoon in moons)
-                    {
-                        moon.ApplyGravity(interactingMoon);
-                    }
-                }
-
-                foreach (Moon moon in moons)
-                {
-                    moon.ApplyVelocity();
-                }
-                stepsY++;
-                if (moons.All(moon => moon.Velocity.Y == 0)) break;
-            }
-            stepsY *= 2;
-
             long stepsZ = 0;
-            while (true)
+            long stepsX = 0;
+
+            bool steppingX = true;
+            bool steppingY = true;
+            bool steppingZ = true;
+            while (steppingX || steppingY || steppingZ)
             {
                 foreach (Moon moon in moons)
                 {
@@ -115,14 +80,17 @@ namespace Day12
                 {
                     moon.ApplyVelocity();
                 }
-                stepsZ++;
-                if (moons.All(moon => moon.Velocity.Z == 0)) break;
+                if (steppingX) stepsX++;
+                if (steppingY) stepsY++;
+                if (steppingZ) stepsZ++;
+                if (moons.All(moon => moon.Velocity.X == 0)) steppingX = false;
+                if (moons.All(moon => moon.Velocity.Y == 0)) steppingY = false;
+                if (moons.All(moon => moon.Velocity.Z == 0)) steppingZ = false;
             }
-            stepsZ *= 2;
 
-            long steps = MathUtils.lcm(MathUtils.lcm(stepsX, stepsY), stepsZ);
+            long steps = MathUtils.LCM(MathUtils.LCM(stepsX, stepsY), stepsZ) * 2;
 
-            Console.WriteLine($"Part 2: {steps * 2}");
+            Console.WriteLine($"Part 2: {steps}");
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
@@ -131,14 +99,14 @@ namespace Day12
 
     public class MathUtils
     {
-        public static long gcf(long x, long y)
+        public static long GCF(long x, long y)
         {
-            return (y == 0) ? x : gcf(y, x % y);
+            return (y == 0) ? x : GCF(y, x % y);
         }
 
-        public static long lcm(long x, long y)
+        public static long LCM(long x, long y)
         {
-            return (x == 0 || y == 0) ? 0 : Math.Abs(x * y) / gcf(x, y);
+            return (x == 0 || y == 0) ? 0 : Math.Abs(x * y) / GCF(x, y);
         }
     }
 
@@ -149,10 +117,6 @@ namespace Day12
 
         public readonly Vector InitialPosition;
         public readonly Vector InitialVelocity;
-
-        public Moon() : this(0, 0, 0)
-        {
-        }
 
         public Moon(int posX, int posY, int posZ)
         {
@@ -189,8 +153,6 @@ namespace Day12
             int totalEnergy = potentialEnergy * kineticEnergy;
             return totalEnergy;
         }
-
-        public bool AtInitial() => InitialPosition.Equals(Position) && InitialVelocity.Equals(Velocity);
     }
 
     public struct Vector
