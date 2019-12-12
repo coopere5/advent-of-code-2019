@@ -60,7 +60,7 @@ namespace Day12
                              .Select(split => new Moon(int.Parse(split[0].Split('=')[1]), int.Parse(split[1].Split('=')[1]), int.Parse(split[2].Split('=')[1].Replace('>', ' '))))
                              .ToList();
 
-            long steps = 0;
+            long stepsX = 0;
             while (true)
             {
                 foreach (Moon moon in moons)
@@ -75,15 +75,70 @@ namespace Day12
                 {
                     moon.ApplyVelocity();
                 }
-                steps++;
-                if (moons.All(moon => moon.Velocity.Equals(moon.InitialVelocity))) break;
-                if (steps % 1000000 == 0) System.Diagnostics.Debug.WriteLine($"{steps}: {sw.Elapsed}");
+                stepsX++;
+                if (moons.All(moon => moon.Velocity.X == 0)) break;
             }
+            stepsX *= 2;
+
+            long stepsY = 0;
+            while (true)
+            {
+                foreach (Moon moon in moons)
+                {
+                    foreach (Moon interactingMoon in moons)
+                    {
+                        moon.ApplyGravity(interactingMoon);
+                    }
+                }
+
+                foreach (Moon moon in moons)
+                {
+                    moon.ApplyVelocity();
+                }
+                stepsY++;
+                if (moons.All(moon => moon.Velocity.Y == 0)) break;
+            }
+            stepsY *= 2;
+
+            long stepsZ = 0;
+            while (true)
+            {
+                foreach (Moon moon in moons)
+                {
+                    foreach (Moon interactingMoon in moons)
+                    {
+                        moon.ApplyGravity(interactingMoon);
+                    }
+                }
+
+                foreach (Moon moon in moons)
+                {
+                    moon.ApplyVelocity();
+                }
+                stepsZ++;
+                if (moons.All(moon => moon.Velocity.Z == 0)) break;
+            }
+            stepsZ *= 2;
+
+            long steps = MathUtils.lcm(MathUtils.lcm(stepsX, stepsY), stepsZ);
 
             Console.WriteLine($"Part 2: {steps * 2}");
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
+        }
+    }
+
+    public class MathUtils
+    {
+        public static long gcf(long x, long y)
+        {
+            return (y == 0) ? x : gcf(y, x % y);
+        }
+
+        public static long lcm(long x, long y)
+        {
+            return (x == 0 || y == 0) ? 0 : Math.Abs(x * y) / gcf(x, y);
         }
     }
 
