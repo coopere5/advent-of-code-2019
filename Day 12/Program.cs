@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Day12
 {
@@ -17,22 +18,10 @@ namespace Day12
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var moons = new List<Moon>();
             var input = File.ReadAllLines("input.txt");
-            foreach (var line in input)
-            {
-                var split = line.Split(',');
-                Moon moon = new Moon
-                {
-                    Position =
-                    {
-                        X = int.Parse(split[0].Split('=')[1]),
-                        Y = int.Parse(split[1].Split('=')[1]),
-                        Z = int.Parse(split[2].Split('=')[1].Replace('>', ' '))
-                    }
-                };
-                moons.Add(moon);
-            }
+            var moons = input.Select(line => line.Split(','))
+                             .Select(split => new Moon(int.Parse(split[0].Split('=')[1]), int.Parse(split[1].Split('=')[1]), int.Parse(split[2].Split('=')[1].Replace('>', ' '))))
+                             .ToList();
 
             for (int steps = 0; steps < 1000; steps++)
             {
@@ -66,27 +55,13 @@ namespace Day12
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var moons = new List<Moon>();
             var input = File.ReadAllLines("input.txt");
-            foreach (var line in input)
-            {
-                var split = line.Split(',');
-                Moon moon = new Moon
-                {
-                    Position =
-                    {
-                        X = int.Parse(split[0].Split('=')[1]),
-                        Y = int.Parse(split[1].Split('=')[1]),
-                        Z = int.Parse(split[2].Split('=')[1].Replace('>', ' '))
-                    }
-                };
-                moons.Add(moon);
-            }
+            var moons = input.Select(line => line.Split(','))
+                             .Select(split => new Moon(int.Parse(split[0].Split('=')[1]), int.Parse(split[1].Split('=')[1]), int.Parse(split[2].Split('=')[1].Replace('>', ' '))))
+                             .ToList();
 
-            var snapshots = new HashSet<Snapshot>();
-            bool running = true;
             long steps = 0;
-            while (running) //this absolutely will not work efficiently, ran for 7 minutes before giving up last time
+            while (true)
             {
                 foreach (Moon moon in moons)
                 {
@@ -100,13 +75,12 @@ namespace Day12
                 {
                     moon.ApplyVelocity();
                 }
-
                 steps++;
-                running = snapshots.Add(new Snapshot(moons[0], moons[1], moons[2], moons[3]));
-
-                if (steps % 10000 == 0) System.Diagnostics.Debug.WriteLine($"{steps}: {sw.Elapsed}");
+                if (moons.All(moon => moon.AtInitial())) break;
+                if (steps % 1000000 == 0) System.Diagnostics.Debug.WriteLine($"{steps}: {sw.Elapsed}");
             }
-            Console.WriteLine($"Part 2: {steps - 1}");
+
+            Console.WriteLine($"Part 2: {steps}");
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
@@ -118,6 +92,9 @@ namespace Day12
         public Vector Position;
         public Vector Velocity;
 
+        private readonly Vector InitialPosition;
+        private readonly Vector InitialVelocity;
+
         public Moon() : this(0, 0, 0)
         {
         }
@@ -126,6 +103,9 @@ namespace Day12
         {
             Position = new Vector(posX, posY, posZ);
             Velocity = new Vector(0, 0, 0);
+
+            InitialPosition = Position;
+            InitialVelocity = Velocity;
         }
 
         public void ApplyGravity(Moon interactingMoon)
@@ -154,6 +134,8 @@ namespace Day12
             int totalEnergy = potentialEnergy * kineticEnergy;
             return totalEnergy;
         }
+
+        public bool AtInitial() => InitialPosition.Equals(Position) && InitialVelocity.Equals(Velocity);
     }
 
     public struct Vector
@@ -167,38 +149,6 @@ namespace Day12
             X = x;
             Y = y;
             Z = z;
-        }
-    }
-
-    public struct Snapshot
-    {
-        private Vector position1;
-        private Vector velocity1;
-
-        private Vector position2;
-        private Vector velocity2;
-
-        private Vector position3;
-        private Vector velocity3;
-
-        private Vector position4;
-        private Vector velocity4;
-
-        public Snapshot(Vector p1, Vector v1, Vector p2, Vector v2, Vector p3, Vector v3, Vector p4, Vector v4)
-        {
-            position1 = p1;
-            velocity1 = v1;
-            position2 = p2;
-            velocity2 = v2;
-            position3 = p3;
-            velocity3 = v3;
-            position4 = p4;
-            velocity4 = v4;
-        }
-
-        public Snapshot(Moon moon1, Moon moon2, Moon moon3, Moon moon4) : this(moon1.Position, moon1.Velocity,
-            moon2.Position, moon2.Velocity, moon3.Position, moon3.Velocity, moon4.Position, moon4.Velocity)
-        {
         }
     }
 }
