@@ -76,11 +76,11 @@ namespace Day12
                     moon.ApplyVelocity();
                 }
                 steps++;
-                if (moons.All(moon => moon.AtInitial())) break;
+                if (moons.All(moon => moon.Velocity.Equals(moon.InitialVelocity))) break;
                 if (steps % 1000000 == 0) System.Diagnostics.Debug.WriteLine($"{steps}: {sw.Elapsed}");
             }
 
-            Console.WriteLine($"Part 2: {steps}");
+            Console.WriteLine($"Part 2: {steps * 2}");
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine(sw.Elapsed);
@@ -92,8 +92,8 @@ namespace Day12
         public Vector Position;
         public Vector Velocity;
 
-        private readonly Vector InitialPosition;
-        private readonly Vector InitialVelocity;
+        public readonly Vector InitialPosition;
+        public readonly Vector InitialVelocity;
 
         public Moon() : this(0, 0, 0)
         {
