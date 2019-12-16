@@ -75,34 +75,49 @@ namespace Day13
 
                 if (computer.AwaitingInput())
                 {
-                    for (long y = screen.Keys.Max(p => p.Y); y >= screen.Keys.Min(p => p.Y); y--)
+                    //code for the display
+                    //for (long y = screen.Keys.Max(p => p.Y); y >= screen.Keys.Min(p => p.Y); y--)
+                    //{
+                    //    for (long x = screen.Keys.Min(p => p.X); x <= screen.Keys.Max(p => p.X); x++)
+                    //    {
+                    //        Point point = new Point(x,y);
+                    //        if (!screen.ContainsKey(point)) continue;
+                    //        switch (screen[point])
+                    //        {
+                    //            case 0:
+                    //                Console.Write(" ");
+                    //                break;
+                    //            case 1:
+                    //                Console.Write("#");
+                    //                break;
+                    //            case 2:
+                    //                Console.Write("$");
+                    //                break;
+                    //            case 3:
+                    //                Console.Write("_");
+                    //                break;
+                    //            case 4:
+                    //                Console.Write("*");
+                    //                break;
+                    //            default:
+                    //                break;
+                    //        }
+                    //    }
+                    //    Console.WriteLine();
+                    //}
+                    Point ballPos = screen.First(v => v.Value == 4).Key;
+                    Point paddlePos = screen.First(v => v.Value == 3).Key;
+                    if (ballPos.X < paddlePos.X)
                     {
-                        for (long x = screen.Keys.Min(p => p.X); x <= screen.Keys.Max(p => p.X); x++)
-                        {
-                            Point point = new Point(x,y);
-                            if (!screen.ContainsKey(point)) continue;
-                            switch (screen[point])
-                            {
-                                case 0:
-                                    Console.Write(" ");
-                                    break;
-                                case 1:
-                                    Console.Write("#");
-                                    break;
-                                case 2:
-                                    Console.Write("$");
-                                    break;
-                                case 3:
-                                    Console.Write("_");
-                                    break;
-                                case 4:
-                                    Console.Write("*");
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        Console.WriteLine();
+                        computer.InputQueue.Enqueue(-1);
+                    }
+                    else if (ballPos.X > paddlePos.X)
+                    {
+                        computer.InputQueue.Enqueue(1);
+                    }
+                    else
+                    {
+                        computer.InputQueue.Enqueue(0);
                     }
                 }
             }
