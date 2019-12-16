@@ -142,18 +142,24 @@ namespace AdventUtils
                     InstructionPtr += 4;
                     break;
                 case 3:
-                    string input;
-                    if (InputQueue.Any())
+                    bool success = false;
+                    int parsed = int.MinValue;
+                    while (!success)
                     {
-                        input = InputQueue.Dequeue().ToString();
-                        if (PrintOutput) Console.WriteLine($"Input: {input}");
+                        string input;
+                        if (InputQueue.Any())
+                        {
+                            input = InputQueue.Dequeue().ToString();
+                            if (PrintOutput) Console.WriteLine($"Input: {input}");
+                        }
+                        else
+                        {
+                            Console.Write("Input: ");
+                            input = Console.ReadLine();
+                        }
+                        success = int.TryParse(input.Trim(), out parsed);
                     }
-                    else
-                    {
-                        Console.Write("Input: ");
-                        input = Console.ReadLine();
-                    }
-                    Memory[param1Key] = int.Parse(input.Trim());
+                    Memory[param1Key] = parsed;
                     InstructionPtr += 2;
                     break;
                 case 4:
