@@ -67,16 +67,25 @@ namespace Day16
         private static int[] GetSequence(int pos, int len)
         {
             if (sequences.ContainsKey(pos)) return sequences[pos];
-            var outList = new List<int>();
-            for (int i = 0; i <= len; i++)
+            var outList = new int[len];
+            int idx = 0;
+
+            for (int j = 0; j < pos; j++)
+            {
+                outList[idx] = sin[0];
+                idx++;
+            }
+
+            for (int i = 1; i <= len/(pos+1); i++)
             {
                 for (int j = 0; j <= pos; j++)
                 {
-                    outList.Add(sin[i % 4]);
+                    if (idx >= len) continue;
+                    outList[idx] = sin[i % 4];
+                    idx++;
                 }
             }
 
-            outList.RemoveAt(0);
             sequences.Add(pos, outList.ToArray());
             return sequences[pos];
         }
