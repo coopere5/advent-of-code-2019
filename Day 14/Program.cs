@@ -19,21 +19,11 @@ namespace Day14
         {
             Stopwatch sw = Stopwatch.StartNew();
 
-            var input = File.ReadAllLines("input.txt");
-            var reactions = input.Select(line => new Reaction(line)).ToList();
-            var inventory = new Dictionary<string, int> { { "ORE", int.MaxValue }, { "FUEL", 0 } };
-            var targetInventory = new Dictionary<string, int> { { "ORE", 0 }, { "FUEL", 1 } };
+            Refinery refinery = new Refinery();
 
-            while (inventory["FUEL"] <= 0)
-            {
-                foreach (var target in targetInventory.ToDictionary(x => x.Key, x => x.Value))
-                {
-                    Reaction reaction = FindReactions(reactions, target.Key).FirstOrDefault();
-                    if (reaction != null) targetInventory.AddMany(reaction.React(inventory));
-                }
-            }
+            refinery.Unrefine(new KeyValuePair<string, int>("FUEL", 1));
 
-            Console.WriteLine(int.MaxValue - inventory["ORE"]);
+            Console.WriteLine($"Part 1: {refinery.GetOre()}");
 
             sw.Stop();
             Debug.WriteLine(sw.Elapsed);
@@ -43,14 +33,61 @@ namespace Day14
         {
             Stopwatch sw = Stopwatch.StartNew();
 
-            var input = File.ReadAllLines("input.txt");
-
-
             sw.Stop();
             Debug.WriteLine(sw.Elapsed);
         }
+    }
 
-        public static List<Reaction> FindReactions(List<Reaction> reactions, string target) => reactions.Where(r => r.Output.ContainsKey(target)).ToList();
+    public class Refinery
+    {
+        public List<Reaction> Reactions;
+        public Dictionary<string, int> Inventory;
+        public Dictionary<string, int> Target;
+
+        private readonly string[] _basicRefinedMaterials;
+
+        public Refinery()
+        {
+            Reactions = File.ReadAllLines("input.txt").Select(line => new Reaction(line)).ToList();
+            Inventory = new Dictionary<string, int>();
+            Target = new Dictionary<string, int> { { "FUEL", 1 } };
+            _basicRefinedMaterials = Reactions.Where(r => r.Input.ContainsKey("ORE"))
+                                             .Select(r => r.Output)
+                                             .SelectMany(output => output.Keys)
+                                             .ToArray();
+        }
+
+        public void Unrefine(KeyValuePair<string, int> targetMaterial)
+        {
+            Reaction rxn = Reactions.First(r => r.Output.ContainsKey(targetMaterial.Key));
+            int trials = (int)Math.Ceiling(targetMaterial.Value * 1.0 / rxn.Output[targetMaterial.Key]);
+            var inputs = rxn.Input;
+            foreach (var input in inputs)
+            {
+                var multipliedInput = new KeyValuePair<string, int>(input.Key, input.Value * trials);
+                if (_basicRefinedMaterials.Contains(multipliedInput.Key))
+                {
+                    Inventory.IncrementOrUpdate(multipliedInput.Key, multipliedInput.Value);
+                }
+                else
+                {
+                    Unrefine(multipliedInput);
+                }
+            }
+        }
+
+        public int GetOre()
+        {
+            int fuel = 0;
+            foreach (var mat in Inventory)
+            {
+                Reaction rxn = Reactions.First(r => r.Output.ContainsKey(mat.Key));
+                int trials = (int)Math.Ceiling(mat.Value * 1.0 / rxn.Output[mat.Key]);
+                fuel += rxn.Input.First().Value * trials;
+            }
+
+            return fuel;
+        }
     }
 
     public class Reaction
@@ -131,12 +168,18 @@ namespace Day14
             dict[key] = value;
         }
 
-        public static void AddMany(this Dictionary<string, int> dict, Dictionary<string, int> add)
+        public static void AddOrUpdateMany(this Dictionary<string, int> dict, Dictionary<string, int> add)
         {
             foreach (var entry in add)
             {
                 dict.AddOrUpdate(entry.Key, entry.Value);
             }
+        }
+
+        public static void IncrementOrUpdate(this Dictionary<string, int> dict, string key, int value)
+        {
+            if (!dict.ContainsKey(key)) dict.Add(key, 0);
+            dict[key] += value;
         }
     }
 }
