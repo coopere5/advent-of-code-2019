@@ -22,13 +22,22 @@ namespace Day19
             var input = File.ReadAllText("input.txt").Split(',').Select(long.Parse).ToArray();
             int count = 0;
 
-            for (int x = 0; x < 50; x++)
+            for (int y = 0; y < 50; y++)
             {
-                for (int y = 0; y < 50; y++)
+                bool found = false;
+                for (int x = 0; x < 50; x++)
                 {
                     IntcodeComputer computer = new IntcodeComputer(input);
                     computer.Run(x, y);
-                    if (computer.OutputQueue.Dequeue() == 1) count++;
+                    if (computer.OutputQueue.Dequeue() == 1)
+                    {
+                        found = true;
+                        count++;
+                    }
+                    else if (found)
+                    {
+                        break;
+                    }
                 }
             }
 
