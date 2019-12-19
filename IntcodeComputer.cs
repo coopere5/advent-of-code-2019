@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace AdventUtils
 {
     public class IntcodeComputer
     {
-        private readonly IDictionary<long, long> Memory;
+        private IDictionary<long, long> Memory;
+        private readonly IReadOnlyDictionary<long, long> ReadOnlyMemory;
+
         private long RelativeBase;
         private long InstructionPtr;
 
@@ -28,11 +31,13 @@ namespace AdventUtils
         {
             long idx = 0;
             Memory = intcode.ToDictionary(key => idx++, value => value);
+            ReadOnlyMemory = new ReadOnlyDictionary<long, long>(Memory);
         }
 
         public IntcodeComputer(IDictionary<long, long> intcode) : this()
         {
             Memory = intcode;
+            ReadOnlyMemory = new ReadOnlyDictionary<long, long>(Memory);
         }
 
         public long Run(params long[] inputParams)
@@ -206,6 +211,17 @@ namespace AdventUtils
         public bool AwaitingInput()
         {
             return PeekNext() == 3 && !InputQueue.Any();
+        }
+
+        public void Reset()
+        {
+            RelativeBase = 0;
+            InstructionPtr = 0;
+
+            InputQueue = new Queue<long>();
+            OutputQueue = new Queue<long>();
+
+            Memory = ReadOnlyMemory.ToDictionary(k => k.Key, v => v.Value);
         }
     }
 }
