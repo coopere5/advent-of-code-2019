@@ -20,17 +20,19 @@ namespace Day19
             Stopwatch sw = Stopwatch.StartNew();
 
             var input = File.ReadAllText("input.txt").Split(',').Select(long.Parse).ToArray();
-            int count = 0;
+            IntcodeComputer computer = new IntcodeComputer(input);
 
+            int count = 0;
             int firstX = 0;
             int lastX = 50;
+
             for (int y = 0; y < 50; y++)
             {
                 bool found = false;
                 int curX = lastX + 1;
                 for (int x = firstX; x < lastX; x++)
                 {
-                    IntcodeComputer computer = new IntcodeComputer(input);
+                    computer.Reset();
                     computer.Run(x, y);
                     if (computer.OutputQueue.Dequeue() == 1)
                     {
@@ -58,6 +60,7 @@ namespace Day19
             Stopwatch sw = Stopwatch.StartNew();
 
             var input = File.ReadAllText("input.txt").Split(',').Select(long.Parse).ToArray();
+            IntcodeComputer computer = new IntcodeComputer(input);
 
             int firstX = 0;
             int y = 99;
@@ -67,13 +70,11 @@ namespace Day19
             {
                 for (int x = firstX; x < 10000; x++)
                 {
-                    IntcodeComputer computer = new IntcodeComputer(input);
+                    computer.Reset();
                     computer.Run(x, y);
-
                     if (computer.OutputQueue.Dequeue() != 1) continue;
-
                     firstX = x;
-                    computer = new IntcodeComputer(input);
+                    computer.Reset();
                     computer.Run(x + 99, y - 99);
                     if (computer.OutputQueue.Dequeue() == 1)
                     {
