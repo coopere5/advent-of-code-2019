@@ -223,5 +223,13 @@ namespace AdventUtils
 
             Memory = ReadOnlyMemory.ToDictionary(k => k.Key, v => v.Value);
         }
+
+        public void AddASCIIInput(string ascii)
+        {
+            foreach (char item in ascii)
+            {
+                InputQueue.Enqueue(item);
+            }
+        }
     }
 }
