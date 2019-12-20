@@ -73,20 +73,7 @@ namespace Day17
             input[0] = 2;
             IntcodeComputer computer = new IntcodeComputer(input);
 
-            string s = @"L,6,R,12, A
-                         L,6,R,12, A
-                         L,10,L,4,L,6, B
-                         L,6,R,12, A
-                         L,6,R,12, A
-                         L,10,L,4,L,6 B
-                         L,6,R,12 A
-                         L,6,L,10,L,10,L,4, C?
-                         L,6,R,12 A
-                         L,10,L,4,L,6 B
-                         L,10,L,10,L,4,L,6, ?
-                         L,6,R,12,
-                         L,6,L,10,L,10,L,4,
-                         L,6";
+            string s = @"L,6,R,12,L,6,R,12,L,10,L,4,L,6,L,6,R,12,L,6,R,12,L,10,L,4,L,6,L,6,R,12,L,6,L,10,L,10,L,4,L,6,R,12,L,10,L,4,L,6,L,10,L,10,L,4,L,6,L,6,R,12,L,6,L,10,L,10,L,4,L,6";
             computer.AddASCIIInput("A,A,B,A,A,B,A,C,A,B,C\n");  //errors: more than 20 characters, need to redo the patterns
             computer.AddASCIIInput("L,6,R,12\n");
             computer.AddASCIIInput("L,10,L,4,L,6\n");
