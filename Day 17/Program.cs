@@ -70,8 +70,25 @@ namespace Day17
             Stopwatch sw = Stopwatch.StartNew();
 
             var input = File.ReadAllText("input.txt").Split(',').Select(long.Parse).ToArray();
+            input[0] = 2;
             IntcodeComputer computer = new IntcodeComputer(input);
 
+            string s = @"L,6,R,12, A
+                         L,6,R,12, A
+                         L,10,L,4,L,6, B
+                         L,6,R,12, A
+                         L,6,R,12, A
+                         L,10,L,4,L,6 B
+                         L,6,R,12 A
+                         L,6,L,10,L,10,L,4, C?
+                         L,6,R,12 A
+                         L,10,L,4,L,6 B
+                         L,10,L,10,L,4,L,6, ?
+                         L,6,R,12,
+                         L,6,L,10,L,10,L,4,
+                         L,6";
+
+            computer.Run();
             sw.Stop();
             Debug.WriteLine(sw.Elapsed);
         }
