@@ -87,8 +87,21 @@ namespace Day17
                          L,6,R,12,
                          L,6,L,10,L,10,L,4,
                          L,6";
+            computer.AddASCIIInput("A,A,B,A,A,B,A\n");
+            computer.AddASCIIInput("L,6,R,12\n");
+            computer.AddASCIIInput("L,10,L,4,L,6\n");
+            computer.AddASCIIInput("L,10,L,10\n");
+            computer.AddASCIIInput("y\n");
+            bool running = true;
+            while (running)
+            {
+                running = computer.RunNext() == long.MinValue;
+                if (computer.OutputQueue.Any())
+                {
+                    Console.Write((char)computer.OutputQueue.Dequeue());
+                }
+            }
 
-            computer.Run();
             sw.Stop();
             Debug.WriteLine(sw.Elapsed);
         }
