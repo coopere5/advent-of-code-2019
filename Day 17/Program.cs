@@ -87,10 +87,10 @@ namespace Day17
                          L,6,R,12,
                          L,6,L,10,L,10,L,4,
                          L,6";
-            computer.AddASCIIInput("A,A,B,A,A,B,A\n");
+            computer.AddASCIIInput("A,A,B,A,A,B,A,C,A,B,C\n");  //errors: more than 20 characters, need to redo the patterns
             computer.AddASCIIInput("L,6,R,12\n");
             computer.AddASCIIInput("L,10,L,4,L,6\n");
-            computer.AddASCIIInput("L,10,L,10\n");
+            computer.AddASCIIInput("L,6,L,10,L,10,L,4\n");
             computer.AddASCIIInput("y\n");
             bool running = true;
             while (running)
