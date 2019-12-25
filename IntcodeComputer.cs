@@ -14,6 +14,7 @@ namespace AdventUtils
         private long InstructionPtr;
 
         public bool PrintOutput = false;
+        public bool AsciiInputMode = false;
 
         public Queue<long> InputQueue { get; set; }
         public Queue<long> OutputQueue { get; set; }
@@ -156,6 +157,12 @@ namespace AdventUtils
                         {
                             input = InputQueue.Dequeue().ToString();
                             if (PrintOutput) Console.WriteLine($"Input: {input}");
+                        }
+                        else if (AsciiInputMode)
+                        {
+                            string line = Console.ReadLine();
+                            AddASCIIInput(line + "\n");
+                            input = "";
                         }
                         else
                         {
