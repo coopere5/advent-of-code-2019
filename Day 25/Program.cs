@@ -38,28 +38,29 @@ namespace Day25
 
         private static void TAS(IntcodeComputer computer)
         {
-            computer.AddASCIIInput("west\n");
-            computer.AddASCIIInput("south\n");
-            computer.AddASCIIInput("east\n");
-            computer.AddASCIIInput("south\n");
-            computer.AddASCIIInput("west\n");
-            computer.AddASCIIInput("west\n");
-            computer.AddASCIIInput("take astrolabe\n");
-            computer.AddASCIIInput("east\n");
-            computer.AddASCIIInput("east\n");
-            computer.AddASCIIInput("north\n");
-            computer.AddASCIIInput("take monolith\n");
-            computer.AddASCIIInput("west\n");
-            computer.AddASCIIInput("north\n");
-            computer.AddASCIIInput("west\n");
-            computer.AddASCIIInput("north\n");
-            computer.AddASCIIInput("take tambourine\n");
-            computer.AddASCIIInput("south\n");
-            computer.AddASCIIInput("west\n");
-            computer.AddASCIIInput("take dark matter\n");
-            computer.AddASCIIInput("west\n");
-            computer.AddASCIIInput("north\n");
-            computer.AddASCIIInput("north\n");
+            string tas = @"west
+                           south
+                           east
+                           south
+                           west
+                           west
+                           take astrolabe
+                           east
+                           east
+                           north
+                           take monolith
+                           west
+                           north
+                           west
+                           north
+                           take tambourine
+                           south
+                           west
+                           take dark matter
+                           west
+                           north
+                           north";
+            computer.AddAsciiInputBlock(tas);
         }
     }
 }
