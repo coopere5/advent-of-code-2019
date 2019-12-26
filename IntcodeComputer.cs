@@ -161,7 +161,7 @@ namespace AdventUtils
                         else if (AsciiInputMode)
                         {
                             string line = Console.ReadLine();
-                            AddASCIIInput(line + "\n");
+                            AddAsciiInput(line + "\n");
                             input = "";
                         }
                         else
@@ -231,11 +231,21 @@ namespace AdventUtils
             Memory = ReadOnlyMemory.ToDictionary(k => k.Key, v => v.Value);
         }
 
-        public void AddASCIIInput(string ascii)
+        public void AddAsciiInput(string ascii)
         {
             foreach (char item in ascii)
             {
                 InputQueue.Enqueue(item);
+            }
+        }
+
+        public void AddAsciiInputLine(string ascii) => AddAsciiInput(ascii + '\n');
+
+        public void AddAsciiInputBlock(string ascii)
+        {
+            foreach (string line in ascii.Split('\n').Select(s => s.Trim()))
+            {
+                AddAsciiInputLine(line);
             }
         }
     }
