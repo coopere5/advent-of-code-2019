@@ -149,7 +149,7 @@ namespace AdventUtils
                     break;
                 case 3:
                     bool success = false;
-                    int parsed = int.MinValue;
+                    long parsed = long.MinValue;
                     while (!success)
                     {
                         string input;
@@ -169,7 +169,7 @@ namespace AdventUtils
                             Console.Write("Input: ");
                             input = Console.ReadLine();
                         }
-                        success = int.TryParse(input.Trim(), out parsed);
+                        success = long.TryParse(input.Trim(), out parsed);
                     }
                     Memory[param1Key] = parsed;
                     InstructionPtr += 2;
